@@ -1,0 +1,59 @@
+
+services:
+  backend:
+    build: 
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: backend
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - MONGO_URL=mongodb+srv://mdasadulkhan3032:1234567890@cluster0.8uaigjw.mongodb.net/docker1
+    depends_on:
+      - mongo
+    volumes:
+      - ./backend:/app/backend
+    networks:
+      - mern-network
+    command: npm run dev          
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db  # <--- connect volume properly
+    networks:
+      - mern-network
+  nginx:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: nginx
+    restart: always
+    networks:
+      - mern-network
+    ports:
+      - "443:443"
+      - "80:80"
+    depends_on:
+      - backend
+    volumes:
+     - ./nginx/ssl:/etc/nginx/ssl
+networks:
+  mern-network:
+    driver: bridge
+
+volumes:
+  mongo-data:   # <--- define volume here 
+
+  
+  # nginx install command   
+  # docker run --name nginx -p 80:80 -v /your/nginx/conf:/etc/nginx/conf.d:ro -d nginx
+  
+# ssl certificate install command   
+# mkdir ssl
+# openssl req -newkey rsa:2048 -nodes -keyout ssl/private.key -x509 -out ssl/certificate.crt
+
+# check children directory
+# Get-ChildItem -Directory
