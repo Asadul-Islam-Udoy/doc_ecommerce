@@ -32,8 +32,8 @@ FROM node:18 AS frontend-builder
     
     # Stage 2: Setup NGINX to serve frontend
     FROM nginx:alpine
-    COPY ./nginx/ssl/server.crt /etc/ssl/certs/server.crt
-    COPY ./nginx/ssl/server.key /etc/ssl/private/server.key
+    COPY nginx/ssl/server.crt /etc/ssl/certs/server.crt
+    COPY nginx/ssl/server.key /etc/ssl/private/server.key
 
     # Copy SSL certificates
      COPY ./nginx/ssl /etc/nginx/ssl
