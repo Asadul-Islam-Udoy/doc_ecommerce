@@ -1,19 +1,17 @@
+# Stage 1: Build backend image
+FROM node:18 AS backend-builder
 
-# Second Stage: Backend Build (Express)
-FROM node
-WORKDIR /app
-
-# Copy backend package.json and install dependencies
+WORKDIR /app/backend
 COPY ./backend/package*.json ./
 RUN npm install
-
-# Copy backend code
 COPY ./backend ./
 
+# Stage 2: Set up backend environment
+FROM node:18 AS backend
 
-
-# Expose port 5000 for the backend
+WORKDIR /app/backend
+COPY --from=backend-builder /app/backend /app/backend
 EXPOSE 5001
 
-# Run the backend app (replace with actual start command if necessary)
+# Command to run the backend (adjust it to your app's entry point)
 CMD ["npm", "run", "dev"]
